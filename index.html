@@ -2,370 +2,1480 @@
 <html lang="ja">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-  <title>10年ぶりの100の質問</title>
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0, viewport-fit=cover"
+  >
+
+  <meta name="theme-color" content="#111111">
+
+  <title>十年ぶり</title>
 
   <style>
     * {
       box-sizing: border-box;
     }
 
+    :root {
+      --bg: #111111;
+      --card: #1b1b1b;
+      --card-light: #242424;
+      --text: #f5f5f5;
+      --muted: #969696;
+      --border: #3b3b3b;
+      --active: #f5f5f5;
+      --active-text: #111111;
+    }
+
     body {
       margin: 0;
-      padding: 24px 18px;
-      background: #111;
-      color: #f5f5f5;
+      padding:
+        max(24px, env(safe-area-inset-top))
+        18px
+        max(30px, env(safe-area-inset-bottom));
+
+      background: var(--bg);
+      color: var(--text);
+
       font-family:
         -apple-system,
         BlinkMacSystemFont,
         "Helvetica Neue",
+        "Hiragino Sans",
         sans-serif;
     }
 
+    button {
+      font-family: inherit;
+      -webkit-tap-highlight-color: transparent;
+    }
+
     .app {
-      max-width: 600px;
+      max-width: 640px;
       margin: 0 auto;
     }
 
-    h1 {
-      font-size: 24px;
-      margin-bottom: 8px;
-    }
-
-    .subtitle {
-      color: #999;
+    header {
       margin-bottom: 28px;
     }
 
-    .filters {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 8px;
-      margin-bottom: 32px;
+    h1 {
+      margin: 0;
+      font-size: 28px;
+      letter-spacing: 0.05em;
     }
 
-    .filter-button {
-      border: 1px solid #555;
-      background: transparent;
-      color: #ddd;
-      padding: 10px 14px;
-      border-radius: 999px;
-      font-size: 15px;
+    .subtitle {
+      margin-top: 8px;
+      color: var(--muted);
+      font-size: 14px;
     }
 
-    .filter-button.active {
-      background: #f5f5f5;
-      color: #111;
-      border-color: #f5f5f5;
-    }
-
-    .question-card {
-      min-height: 250px;
-      border: 1px solid #444;
-      border-radius: 24px;
-      padding: 24px;
-
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-
+    .section {
       margin-bottom: 24px;
     }
 
-    .number {
-      color: #888;
-      font-size: 13px;
-      margin-bottom: 16px;
+    .section-title {
+      margin-bottom: 10px;
+      color: var(--muted);
+      font-size: 12px;
+      letter-spacing: 0.08em;
     }
 
-    #question {
-      font-size: 25px;
-      line-height: 1.55;
+    .button-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .chip {
+      min-height: 42px;
+
+      border: 1px solid var(--border);
+      border-radius: 999px;
+
+      background: transparent;
+      color: #dddddd;
+
+      padding: 9px 14px;
+
+      font-size: 14px;
+      cursor: pointer;
+    }
+
+    .chip.active {
+      background: var(--active);
+      color: var(--active-text);
+      border-color: var(--active);
       font-weight: 600;
     }
 
-    #tags {
-      margin-top: 22px;
-      color: #999;
+    .question-card {
+      min-height: 290px;
+
+      display: flex;
+      flex-direction: column;
+
+      border: 1px solid var(--border);
+      border-radius: 24px;
+
+      background: var(--card);
+
+      padding: 26px 24px;
+      margin-bottom: 18px;
+
+      transition:
+        opacity 0.15s ease,
+        transform 0.15s ease;
+    }
+
+    .question-card.change {
+      opacity: 0;
+      transform: translateY(6px);
+    }
+
+    .question-number {
+      color: var(--muted);
+      font-size: 12px;
+      letter-spacing: 0.1em;
+    }
+
+    .danger {
+      margin-top: 8px;
       font-size: 13px;
+      min-height: 20px;
+    }
+
+    .question-text {
+      flex: 1;
+
+      display: flex;
+      align-items: center;
+
+      padding: 28px 0;
+
+      font-size: 25px;
+      font-weight: 650;
+      line-height: 1.55;
+    }
+
+    .question-tags {
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.8;
     }
 
     .draw-button {
       width: 100%;
+      min-height: 58px;
+
       border: none;
       border-radius: 18px;
-      padding: 18px;
 
-      background: white;
-      color: black;
+      background: #f5f5f5;
+      color: #111111;
 
-      font-size: 19px;
-      font-weight: bold;
+      font-size: 18px;
+      font-weight: 700;
+
+      cursor: pointer;
+    }
+
+    .save-buttons {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+
+      margin-top: 10px;
+    }
+
+    .save-button {
+      min-height: 48px;
+
+      border: 1px solid var(--border);
+      border-radius: 15px;
+
+      background: transparent;
+      color: var(--text);
+
+      font-size: 14px;
+
+      cursor: pointer;
+    }
+
+    .save-button.active {
+      background: var(--card-light);
+      border-color: #777777;
+      font-weight: 650;
+    }
+
+    .save-button:disabled {
+      opacity: 0.35;
     }
 
     .status {
-      text-align: center;
-      color: #777;
+      margin: 15px 0 28px;
+
+      color: var(--muted);
+
       font-size: 13px;
-      margin-top: 16px;
+      text-align: center;
+    }
+
+    .reset-button {
+      display: block;
+
+      margin: 0 auto 30px;
+
+      border: none;
+      background: transparent;
+
+      color: #777777;
+      text-decoration: underline;
+
+      font-size: 13px;
+
+      cursor: pointer;
+    }
+
+    details {
+      border-top: 1px solid var(--border);
+      padding-top: 18px;
+      margin-top: 12px;
+    }
+
+    summary {
+      cursor: pointer;
+      font-size: 15px;
+      font-weight: 600;
+      padding: 6px 0 14px;
+    }
+
+    .saved-group {
+      margin: 18px 0 26px;
+    }
+
+    .saved-heading {
+      margin-bottom: 10px;
+      font-size: 14px;
+      color: var(--muted);
+    }
+
+    .saved-list {
+      display: grid;
+      gap: 8px;
+    }
+
+    .saved-item {
+      width: 100%;
+
+      text-align: left;
+
+      border: 1px solid var(--border);
+      border-radius: 14px;
+
+      background: var(--card);
+      color: var(--text);
+
+      padding: 13px 14px;
+
+      font-size: 14px;
+      line-height: 1.5;
+
+      cursor: pointer;
+    }
+
+    .empty {
+      color: #666666;
+      font-size: 13px;
+    }
+
+    @media (max-width: 380px) {
+      .question-text {
+        font-size: 22px;
+      }
+
+      .chip {
+        font-size: 13px;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .question-card {
+        transition: none;
+      }
     }
   </style>
 </head>
+
 
 <body>
 
 <div class="app">
 
-  <h1>10年ぶりの100の質問</h1>
-  <div class="subtitle">
-    10年ぶりに会った人間に、何を聞く？
-  </div>
-
-  <div class="filters">
-
-    <button class="filter-button" data-tag="サブカル">
-      サブカル
-    </button>
-
-    <button class="filter-button" data-tag="人生とは">
-      人生とは
-    </button>
-
-    <button class="filter-button" data-tag="野望">
-      野望
-    </button>
-
-    <button class="filter-button" data-tag="あの頃に帰れたら">
-      あの頃に帰れたら
-    </button>
-
-    <button class="filter-button" data-tag="自分語り">
-      自分語り
-    </button>
-
-    <button class="filter-button" data-tag="オレと東京">
-      オレと東京
-    </button>
-
-  </div>
+  <header>
+    <h1>十年ぶり</h1>
+    <div class="subtitle">
+      十年ぶりに会った人間に、何を聞く？
+    </div>
+  </header>
 
 
-  <div class="question-card">
+  <!-- カテゴリ -->
 
-    <div class="number">
-      QUESTION <span id="number">—</span>
+  <section class="section">
+
+    <div class="section-title">
+      CATEGORY
     </div>
 
-    <div id="question">
-      カテゴリを選ぶか、そのまま引いてください。
+    <div class="button-row" id="category-buttons">
+
+      <button class="chip active" data-category="全部">
+        全部
+      </button>
+
+      <button class="chip" data-category="サブカル">
+        サブカル
+      </button>
+
+      <button class="chip" data-category="人生とは">
+        人生とは
+      </button>
+
+      <button class="chip" data-category="野望">
+        野望
+      </button>
+
+      <button class="chip" data-category="あの頃に帰れたら">
+        あの頃に帰れたら
+      </button>
+
+      <button class="chip" data-category="自分語り">
+        自分語り
+      </button>
+
+      <button class="chip" data-category="オレと東京">
+        オレと東京
+      </button>
+
     </div>
 
-    <div id="tags"></div>
+  </section>
+
+
+  <!-- 危険度 -->
+
+  <section class="section">
+
+    <div class="section-title">
+      危険度：ここまで出してよい
+    </div>
+
+    <div class="button-row" id="danger-buttons">
+
+      <button class="chip" data-danger="1">
+        🔥
+      </button>
+
+      <button class="chip" data-danger="2">
+        🔥2
+      </button>
+
+      <button class="chip" data-danger="3">
+        🔥3
+      </button>
+
+      <button class="chip" data-danger="4">
+        🔥4
+      </button>
+
+      <button class="chip active" data-danger="5">
+        🔥5
+      </button>
+
+    </div>
+
+  </section>
+
+
+  <!-- 質問 -->
+
+  <div class="question-card" id="question-card">
+
+    <div class="question-number">
+      QUESTION <span id="question-number">—</span> / 100
+    </div>
+
+    <div class="danger" id="question-danger"></div>
+
+    <div class="question-text" id="question-text">
+      カテゴリと危険度を選んで、質問を引いてください。
+    </div>
+
+    <div class="question-tags" id="question-tags"></div>
 
   </div>
 
 
-  <button id="draw" class="draw-button">
+  <button class="draw-button" id="draw-button">
     🎲 質問を引く
   </button>
 
 
-  <div class="status">
-    候補：<span id="candidate-count">0</span>問
+  <div class="save-buttons">
+
+    <button
+      class="save-button"
+      id="favorite-button"
+      disabled
+    >
+      ☆ お気に入り
+    </button>
+
+    <button
+      class="save-button"
+      id="later-button"
+      disabled
+    >
+      ⏰ あとで聞く
+    </button>
+
   </div>
+
+
+  <div class="status" id="status"></div>
+
+
+  <button class="reset-button" id="reset-button">
+    引いた質問の履歴をリセット
+  </button>
+
+
+  <!-- 保存リスト -->
+
+  <details>
+
+    <summary>
+      保存した質問を見る
+    </summary>
+
+
+    <div class="saved-group">
+
+      <div class="saved-heading">
+        ★ お気に入り
+        （<span id="favorite-count">0</span>）
+      </div>
+
+      <div class="saved-list" id="favorite-list"></div>
+
+    </div>
+
+
+    <div class="saved-group">
+
+      <div class="saved-heading">
+        ⏰ あとで聞く
+        （<span id="later-count">0</span>）
+      </div>
+
+      <div class="saved-list" id="later-list"></div>
+
+    </div>
+
+  </details>
 
 </div>
 
 
 <script>
 
+/* ----------------------------------------
+   質問データ
+---------------------------------------- */
+
 const questions = [
 
   {
-    text: "サブカルって、いつから「サブ」じゃなくなったと思います？",
-    tags: ["サブカル", "人生とは"]
+    id: 1,
+    text: "10年前の自分に会ったら、まず何を注意しますか？",
+    tags: ["あの頃に帰れたら", "自分語り"],
+    danger: 2
   },
 
   {
-    text: "昔好きだったけど、今見るときつい作品あります？",
-    tags: ["サブカル", "あの頃に帰れたら"]
-  },
-
-  {
-    text: "人生で一番金を使ったオタク分野は？",
-    tags: ["サブカル", "自分語り"]
-  },
-
-  {
-    text: "40歳の私に「今のうちにやっとけ」と言いたいことは？",
-    tags: ["人生とは", "自分語り"]
-  },
-
-  {
-    text: "20歳に戻れるけど記憶はそのまま。戻ります？",
-    tags: ["あの頃に帰れたら", "人生とは", "自分語り"]
-  },
-
-  {
-    text: "100歳まで健康確定なら、何を始めます？",
-    tags: ["野望", "人生とは"]
-  },
-
-  {
-    text: "宝くじで10億円当たったら、東京に残ります？",
-    tags: ["野望", "オレと東京", "自分語り"]
-  },
-
-  {
-    text: "東京で一生行かなくても困らない街は？",
-    tags: ["オレと東京"]
-  },
-
-  {
-    text: "山手線で一番信用してる駅は？",
-    tags: ["オレと東京"]
-  },
-
-  {
+    id: 2,
     text: "この10年で一番「まさかこうなるとは」と思ったことは？",
-    tags: ["自分語り", "あの頃に帰れたら"]
+    tags: ["あの頃に帰れたら", "自分語り"],
+    danger: 2
   },
 
   {
-    text: "自分の人生にタイトルをつけるなら、今のところ何です？",
-    tags: ["人生とは", "自分語り"]
+    id: 3,
+    text: "10年前と比べて、明らかにどうでもよくなったことは？",
+    tags: ["人生とは", "あの頃に帰れたら"],
+    danger: 2
   },
 
   {
+    id: 4,
+    text: "逆に、昔より妙にこだわるようになったことは？",
+    tags: ["人生とは", "自分語り"],
+    danger: 2
+  },
+
+  {
+    id: 5,
+    text: "最近「自分も大人になったな」と思った瞬間は？",
+    tags: ["人生とは", "自分語り"],
+    danger: 1
+  },
+
+  {
+    id: 6,
+    text: "最近「いや全然大人じゃないな」と思った瞬間は？",
+    tags: ["自分語り"],
+    danger: 1
+  },
+
+  {
+    id: 7,
+    text: "60代って、実際なってみるとどうですか？",
+    tags: ["人生とは", "自分語り"],
+    danger: 2
+  },
+
+  {
+    id: 8,
+    text: "50代の自分にひとこと言うなら？",
+    tags: ["人生とは", "あの頃に帰れたら"],
+    danger: 2
+  },
+
+  {
+    id: 9,
+    text: "40歳の私に「今のうちにやっとけ」と言いたいことは？",
+    tags: ["人生とは"],
+    danger: 2
+  },
+
+  {
+    id: 10,
+    text: "40歳の私に「それ別にやらなくていい」と言いたいことは？",
+    tags: ["人生とは"],
+    danger: 2
+  },
+
+  {
+    id: 11,
+    text: "東京、10年前と比べて住みやすくなりました？",
+    tags: ["オレと東京", "あの頃に帰れたら"],
+    danger: 1
+  },
+
+  {
+    id: 12,
+    text: "東京で最近一番「東京だなあ」と思った出来事は？",
+    tags: ["オレと東京"],
+    danger: 1
+  },
+
+  {
+    id: 13,
+    text: "東京で一生行かなくても困らない街は？",
+    tags: ["オレと東京"],
+    danger: 1
+  },
+
+  {
+    id: 14,
+    text: "逆に、なくなったら本気で困る街は？",
+    tags: ["オレと東京"],
+    danger: 1
+  },
+
+  {
+    id: 15,
+    text: "「東京のここだけは地方民に誤解されている」と思うことは？",
+    tags: ["オレと東京"],
+    danger: 1
+  },
+
+  {
+    id: 16,
+    text: "東京暮らしで身についた無駄な特殊能力は？",
+    tags: ["オレと東京", "自分語り"],
+    danger: 1
+  },
+
+  {
+    id: 17,
+    text: "山手線で一番信用してる駅は？",
+    tags: ["オレと東京"],
+    danger: 1
+  },
+
+  {
+    id: 18,
+    text: "山手線で一番「何なんだここ」と思う駅は？",
+    tags: ["オレと東京"],
+    danger: 1
+  },
+
+  {
+    id: 19,
+    text: "東京で老人になったら住みたい街は？",
+    tags: ["オレと東京", "人生とは"],
+    danger: 2
+  },
+
+  {
+    id: 20,
+    text: "東京を一回全部更地にして再設計できるなら、何を消します？",
+    tags: ["オレと東京", "野望"],
+    danger: 1
+  },
+
+  {
+    id: 21,
+    text: "この10年で一番ハマった作品は？",
+    tags: ["サブカル", "あの頃に帰れたら"],
+    danger: 1
+  },
+
+  {
+    id: 22,
+    text: "最近「これ若者向けだけど面白いな」と思ったものは？",
+    tags: ["サブカル"],
+    danger: 1
+  },
+
+  {
+    id: 23,
+    text: "最近「これはもう俺にはわからん」と思ったものは？",
+    tags: ["サブカル", "人生とは"],
+    danger: 1
+  },
+
+  {
+    id: 24,
+    text: "昔好きだったけど、今見るときつい作品あります？",
+    tags: ["サブカル", "あの頃に帰れたら"],
+    danger: 2
+  },
+
+  {
+    id: 25,
+    text: "逆に、昔より今の方が刺さる作品は？",
+    tags: ["サブカル", "人生とは"],
+    danger: 1
+  },
+
+  {
+    id: 26,
+    text: "人生で一番繰り返し見た映画は？",
+    tags: ["サブカル", "自分語り"],
+    danger: 1
+  },
+
+  {
+    id: 27,
+    text: "人生で一番繰り返し読んだ漫画は？",
+    tags: ["サブカル", "自分語り"],
+    danger: 1
+  },
+
+  {
+    id: 28,
+    text: "人生で一番金を使ったオタク分野は？",
+    tags: ["サブカル", "自分語り"],
+    danger: 2
+  },
+
+  {
+    id: 29,
+    text: "一番「何でこれにハマったんだろう」と思うジャンルは？",
+    tags: ["サブカル", "自分語り"],
+    danger: 1
+  },
+
+  {
+    id: 30,
+    text: "人にはあまり言ってないけど、実は好きな作品あります？",
+    tags: ["サブカル", "自分語り"],
+    danger: 2
+  },
+
+  {
+    id: 31,
+    text: "サブカルって、いつから「サブ」じゃなくなったと思います？",
+    tags: ["サブカル", "人生とは"],
+    danger: 1
+  },
+
+  {
+    id: 32,
+    text: "最近「サブカルの老人会だな」と感じる瞬間あります？",
+    tags: ["サブカル", "人生とは"],
+    danger: 1
+  },
+
+  {
+    id: 33,
+    text: "今の若いオタクを見ていて羨ましいことは？",
+    tags: ["サブカル", "人生とは"],
+    danger: 1
+  },
+
+  {
+    id: 34,
+    text: "逆に「昔の方がよかった」と本気で思うことは？",
+    tags: ["サブカル", "あの頃に帰れたら"],
+    danger: 1
+  },
+
+  {
+    id: 35,
+    text: "昔のオタク文化で、復活してほしいものは？",
+    tags: ["サブカル", "あの頃に帰れたら"],
+    danger: 1
+  },
+
+  {
+    id: 36,
+    text: "絶対に復活しなくていいものは？",
+    tags: ["サブカル", "あの頃に帰れたら"],
+    danger: 1
+  },
+
+  {
+    id: 37,
+    text: "VHS・CD・DVD・紙の本、この中で最後まで生き残ると思うのは？",
+    tags: ["サブカル"],
+    danger: 1
+  },
+
+  {
+    id: 38,
+    text: "サブスクに魂を売りました？",
+    tags: ["サブカル", "自分語り"],
+    danger: 1
+  },
+
+  {
+    id: 39,
+    text: "物理メディア、まだ持ってます？",
+    tags: ["サブカル", "自分語り"],
+    danger: 1
+  },
+
+  {
+    id: 40,
+    text: "「捨てられないオタク遺産」あります？",
+    tags: ["サブカル", "自分語り"],
+    danger: 1
+  },
+
+  {
+    id: 41,
+    text: "人生で一番好きだった雑誌は？",
+    tags: ["サブカル", "あの頃に帰れたら"],
+    danger: 1
+  },
+
+  {
+    id: 42,
+    text: "廃刊になって悲しかった雑誌は？",
+    tags: ["サブカル", "あの頃に帰れたら"],
+    danger: 1
+  },
+
+  {
+    id: 43,
+    text: "今、本屋に行くとどの棚を見ます？",
+    tags: ["サブカル", "自分語り"],
+    danger: 1
+  },
+
+  {
+    id: 44,
+    text: "古本屋ってまだ行きます？",
+    tags: ["サブカル"],
+    danger: 1
+  },
+
+  {
+    id: 45,
+    text: "神保町で一日潰せます？",
+    tags: ["サブカル", "オレと東京"],
+    danger: 1
+  },
+
+  {
+    id: 46,
+    text: "中野ブロードウェイ、まだテンション上がります？",
+    tags: ["サブカル", "オレと東京"],
+    danger: 1
+  },
+
+  {
+    id: 47,
+    text: "秋葉原はもう別の街になりました？",
+    tags: ["サブカル", "オレと東京", "あの頃に帰れたら"],
+    danger: 1
+  },
+
+  {
+    id: 48,
+    text: "いま一番信用している文化施設は？",
+    tags: ["サブカル"],
+    danger: 1
+  },
+
+  {
+    id: 49,
+    text: "博物館・映画館・ライブハウス・書店、一個だけ残すなら？",
+    tags: ["サブカル", "人生とは"],
+    danger: 2
+  },
+
+  {
+    id: 50,
+    text: "「文化とはこれだ」と思う食べ物は？",
+    tags: ["サブカル", "自分語り"],
+    danger: 1
+  },
+
+  {
+    id: 51,
+    text: "最近買った一番くだらないものは？",
+    tags: ["自分語り"],
+    danger: 1
+  },
+
+  {
+    id: 52,
+    text: "最近買った一番賢かったものは？",
+    tags: ["自分語り"],
+    danger: 1
+  },
+
+  {
+    id: 53,
+    text: "これまで買った中で最大の無駄遣いは？",
+    tags: ["自分語り"],
+    danger: 3
+  },
+
+  {
+    id: 54,
+    text: "逆に「高かったけど元取ったな」というものは？",
+    tags: ["自分語り"],
+    danger: 2
+  },
+
+  {
+    id: 55,
+    text: "いまだにガラケー的なものに未練あります？",
+    tags: ["サブカル", "あの頃に帰れたら"],
+    danger: 1
+  },
+
+  {
+    id: 56,
+    text: "AI、使ってます？",
+    tags: ["サブカル", "自分語り"],
+    danger: 1
+  },
+
+  {
+    id: 57,
+    text: "ChatGPTに聞いてはいけないと思うことは？",
+    tags: ["人生とは", "サブカル"],
+    danger: 2
+  },
+
+  {
+    id: 58,
+    text: "AIに一番やってほしい家事は？",
+    tags: ["野望", "自分語り"],
+    danger: 1
+  },
+
+  {
+    id: 59,
+    text: "AIに絶対やらせたくないことは？",
+    tags: ["人生とは"],
+    danger: 2
+  },
+
+  {
+    id: 60,
+    text: "自分の人格をAIにコピーできるなら、やります？",
+    tags: ["人生とは", "野望", "自分語り"],
+    danger: 3
+  },
+
+  {
+    id: 61,
+    text: "SNSは人類を幸せにしたと思います？",
+    tags: ["人生とは", "サブカル"],
+    danger: 2
+  },
+
+  {
+    id: 62,
+    text: "X、まだ見てます？",
+    tags: ["サブカル", "自分語り"],
+    danger: 1
+  },
+
+  {
+    id: 63,
+    text: "炎上を見ると参加する派ですか、野次馬派ですか、そっと閉じる派ですか？",
+    tags: ["サブカル", "自分語り"],
+    danger: 1
+  },
+
+  {
+    id: 64,
+    text: "YouTubeのおすすめ欄、人に見せられます？",
+    tags: ["サブカル", "自分語り"],
+    danger: 2
+  },
+
+  {
+    id: 65,
+    text: "スマホの検索履歴、人に見られたら困ります？",
+    tags: ["自分語り"],
+    danger: 3
+  },
+
+  {
+    id: 66,
+    text: "最近Wikipediaで何調べました？",
+    tags: ["サブカル", "自分語り"],
+    danger: 1
+  },
+
+  {
+    id: 67,
+    text: "一番よく見るYouTubeジャンルは？",
+    tags: ["サブカル", "自分語り"],
+    danger: 1
+  },
+
+  {
+    id: 68,
+    text: "「アルゴリズムに俺のことを理解されすぎている」と思う瞬間は？",
+    tags: ["サブカル", "自分語り"],
+    danger: 2
+  },
+
+  {
+    id: 69,
+    text: "逆におすすめ機能に「何もわかってねえな」と思う瞬間は？",
+    tags: ["サブカル", "自分語り"],
+    danger: 1
+  },
+
+  {
+    id: 70,
+    text: "ネットがなかった時代に戻れと言われたら、何日耐えられます？",
+    tags: ["サブカル", "あの頃に帰れたら"],
+    danger: 1
+  },
+
+  {
+    id: 71,
+    text: "この10年で一番笑った出来事は？",
+    tags: ["自分語り", "あの頃に帰れたら"],
+    danger: 2
+  },
+
+  {
+    id: 72,
+    text: "この10年で一番「俺何やってるんだろう」と思った出来事は？",
+    tags: ["自分語り", "あの頃に帰れたら"],
+    danger: 3
+  },
+
+  {
+    id: 73,
+    text: "最近、腹が立つことって何です？",
+    tags: ["自分語り", "人生とは"],
+    danger: 2
+  },
+
+  {
+    id: 74,
+    text: "最近、妙に嬉しかった小さいことは？",
+    tags: ["自分語り"],
+    danger: 1
+  },
+
+  {
+    id: 75,
+    text: "今一番楽しみにしていることは？",
+    tags: ["野望", "自分語り"],
+    danger: 1
+  },
+
+  {
+    id: 76,
+    text: "最近「歳取るのも悪くないな」と思ったことは？",
+    tags: ["人生とは", "自分語り"],
+    danger: 2
+  },
+
+  {
+    id: 77,
+    text: "最近「歳取るってこういうことか」と絶望したことは？",
+    tags: ["人生とは", "自分語り"],
+    danger: 3
+  },
+
+  {
+    id: 78,
+    text: "今でも徹夜できます？",
+    tags: ["自分語り"],
+    danger: 1
+  },
+
+  {
+    id: 79,
+    text: "徹夜した翌日、何日引きずります？",
+    tags: ["自分語り"],
+    danger: 1
+  },
+
+  {
+    id: 80,
+    text: "健康のために始めたのに全然続かなかったことは？",
+    tags: ["自分語り"],
+    danger: 2
+  },
+
+  {
+    id: 81,
+    text: "もし今から別の仕事を始めるなら何します？",
+    tags: ["野望", "人生とは"],
+    danger: 2
+  },
+
+  {
+    id: 82,
+    text: "20歳に戻れるけど記憶はそのまま、戻ります？",
+    tags: ["あの頃に帰れたら", "人生とは"],
+    danger: 3
+  },
+
+  {
+    id: 83,
+    text: "20歳に戻れるけどスマホは禁止、戻ります？",
+    tags: ["あの頃に帰れたら", "サブカル"],
+    danger: 2
+  },
+
+  {
+    id: 84,
+    text: "100歳まで健康確定なら、何を始めます？",
+    tags: ["野望", "人生とは"],
+    danger: 2
+  },
+
+  {
+    id: 85,
+    text: "宝くじで10億円当たったら、東京に残ります？",
+    tags: ["野望", "オレと東京"],
+    danger: 2
+  },
+
+  {
+    id: 86,
+    text: "明日から働かなくていいなら、最初の一週間何します？",
+    tags: ["野望", "自分語り"],
+    danger: 2
+  },
+
+  {
+    id: 87,
+    text: "一年間だけ完全に自由なら、何をします？",
+    tags: ["野望", "自分語り"],
+    danger: 2
+  },
+
+  {
+    id: 88,
     text: "今から大学に入り直すなら何を専攻します？",
-    tags: ["野望", "あの頃に帰れたら"]
+    tags: ["野望", "あの頃に帰れたら"],
+    danger: 2
+  },
+
+  {
+    id: 89,
+    text: "一個だけ専門知識を瞬間的に習得できるなら何がいい？",
+    tags: ["野望"],
+    danger: 1
+  },
+
+  {
+    id: 90,
+    text: "一個だけ楽器を完璧に弾けるようになるなら？",
+    tags: ["野望", "サブカル"],
+    danger: 1
+  },
+
+  {
+    id: 91,
+    text: "宇宙人が来たら、とりあえず何を見せます？",
+    tags: ["サブカル", "人生とは"],
+    danger: 1
+  },
+
+  {
+    id: 92,
+    text: "人類が滅亡したあと、一本だけ映画を宇宙に残すなら？",
+    tags: ["サブカル", "人生とは"],
+    danger: 2
+  },
+
+  {
+    id: 93,
+    text: "人類文明を説明する漫画を一冊選ぶなら？",
+    tags: ["サブカル", "人生とは"],
+    danger: 2
+  },
+
+  {
+    id: 94,
+    text: "「日本文化を一個だけ説明して」と言われたら何を説明します？",
+    tags: ["サブカル", "人生とは"],
+    danger: 2
+  },
+
+  {
+    id: 95,
+    text: "自分の人生にタイトルをつけるなら、今のところ何です？",
+    tags: ["人生とは", "自分語り"],
+    danger: 4
+  },
+
+  {
+    id: 96,
+    text: "自伝を書くなら絶対に書かない章は？",
+    tags: ["自分語り", "人生とは"],
+    danger: 5
+  },
+
+  {
+    id: 97,
+    text: "自分を映画化するなら誰に演じてほしいです？",
+    tags: ["サブカル", "自分語り"],
+    danger: 2
+  },
+
+  {
+    id: 98,
+    text: "葬式で流してほしい曲、もう決めてます？",
+    tags: ["人生とは", "サブカル"],
+    danger: 4
+  },
+
+  {
+    id: 99,
+    text: "墓碑に一言だけ刻めるなら何て書きます？",
+    tags: ["人生とは", "自分語り"],
+    danger: 4
+  },
+
+  {
+    id: 100,
+    text: "で、10年ぶりに私に会ってみて、率直にどうですか？",
+    tags: ["自分語り", "人生とは"],
+    danger: 5
   }
 
 ];
 
 
-// 現在選択されているタグ
-const selectedTags = new Set();
+/* ----------------------------------------
+   状態
+---------------------------------------- */
+
+let activeCategory = "全部";
+
+let maxDanger = 5;
+
+let currentQuestion = null;
 
 
-// 一度引いた質問を記録
-const usedQuestions = new Set();
+/* ----------------------------------------
+   localStorage
+---------------------------------------- */
 
+function loadSet(key) {
 
-const filterButtons =
-  document.querySelectorAll(".filter-button");
+  try {
 
-const drawButton =
-  document.getElementById("draw");
+    const data =
+      JSON.parse(localStorage.getItem(key) || "[]");
 
-const questionElement =
-  document.getElementById("question");
+    return new Set(data);
 
-const numberElement =
-  document.getElementById("number");
+  } catch {
 
-const tagsElement =
-  document.getElementById("tags");
-
-const candidateCountElement =
-  document.getElementById("candidate-count");
-
-
-// 現在の条件に合う質問を取得
-function getCandidates() {
-
-  let candidates = questions;
-
-
-  // タグが選ばれていたら絞り込み
-  if (selectedTags.size > 0) {
-
-    candidates = questions.filter(question => {
-
-      return question.tags.some(tag =>
-        selectedTags.has(tag)
-      );
-
-    });
+    return new Set();
 
   }
 
+}
 
-  // まだ引いていない質問だけ残す
-  candidates = candidates.filter(
-    question => !usedQuestions.has(question)
+
+function saveSet(key, set) {
+
+  localStorage.setItem(
+    key,
+    JSON.stringify([...set])
   );
 
-
-  return candidates;
 }
 
 
-// 候補数を更新
-function updateCandidateCount() {
+let usedQuestions =
+  loadSet("10years-used");
 
-  const candidates = getCandidates();
+let favoriteQuestions =
+  loadSet("10years-favorites");
 
-  candidateCountElement.textContent =
-    candidates.length;
+let laterQuestions =
+  loadSet("10years-later");
+
+
+/* ----------------------------------------
+   DOM
+---------------------------------------- */
+
+const card =
+  document.getElementById("question-card");
+
+const questionNumber =
+  document.getElementById("question-number");
+
+const questionText =
+  document.getElementById("question-text");
+
+const questionDanger =
+  document.getElementById("question-danger");
+
+const questionTags =
+  document.getElementById("question-tags");
+
+const drawButton =
+  document.getElementById("draw-button");
+
+const favoriteButton =
+  document.getElementById("favorite-button");
+
+const laterButton =
+  document.getElementById("later-button");
+
+const resetButton =
+  document.getElementById("reset-button");
+
+const status =
+  document.getElementById("status");
+
+
+/* ----------------------------------------
+   フィルター
+---------------------------------------- */
+
+function matchesFilters(question) {
+
+  const categoryOK =
+    activeCategory === "全部"
+    ||
+    question.tags.includes(activeCategory);
+
+
+  const dangerOK =
+    question.danger <= maxDanger;
+
+
+  return categoryOK && dangerOK;
 
 }
 
 
-// フィルターボタン
-filterButtons.forEach(button => {
+function getUnusedCandidates() {
 
-  button.addEventListener("click", () => {
+  return questions.filter(question =>
 
-    const tag =
-      button.dataset.tag;
+    matchesFilters(question)
+    &&
+    !usedQuestions.has(question.id)
+
+  );
+
+}
 
 
-    if (selectedTags.has(tag)) {
+function getAllMatchingQuestions() {
 
-      selectedTags.delete(tag);
+  return questions.filter(matchesFilters);
 
-      button.classList.remove("active");
+}
 
-    } else {
 
-      selectedTags.add(tag);
+/* ----------------------------------------
+   ステータス
+---------------------------------------- */
+
+function updateStatus() {
+
+  const all =
+    getAllMatchingQuestions();
+
+  const unused =
+    getUnusedCandidates();
+
+
+  status.textContent =
+    `条件該当 ${all.length}問 ／ 未使用 ${unused.length}問`;
+
+}
+
+
+/* ----------------------------------------
+   カテゴリ操作
+---------------------------------------- */
+
+document
+  .querySelectorAll("[data-category]")
+  .forEach(button => {
+
+    button.addEventListener("click", () => {
+
+      activeCategory =
+        button.dataset.category;
+
+
+      document
+        .querySelectorAll("[data-category]")
+        .forEach(item =>
+          item.classList.remove("active")
+        );
+
 
       button.classList.add("active");
 
-    }
 
+      updateStatus();
 
-    updateCandidateCount();
+    });
 
   });
 
-});
+
+/* ----------------------------------------
+   危険度操作
+---------------------------------------- */
+
+document
+  .querySelectorAll("[data-danger]")
+  .forEach(button => {
+
+    button.addEventListener("click", () => {
+
+      maxDanger =
+        Number(button.dataset.danger);
 
 
-// 質問を引く
+      document
+        .querySelectorAll("[data-danger]")
+        .forEach(item =>
+          item.classList.remove("active")
+        );
+
+
+      button.classList.add("active");
+
+
+      updateStatus();
+
+    });
+
+  });
+
+
+/* ----------------------------------------
+   質問表示
+---------------------------------------- */
+
+function displayQuestion(question) {
+
+  currentQuestion = question;
+
+
+  card.classList.add("change");
+
+
+  setTimeout(() => {
+
+    questionNumber.textContent =
+      question.id;
+
+
+    questionDanger.textContent =
+      "🔥".repeat(question.danger)
+      +
+      `  危険度 ${question.danger}`;
+
+
+    questionText.textContent =
+      question.text;
+
+
+    questionTags.textContent =
+      question.tags.join(" ／ ");
+
+
+    updateSaveButtons();
+
+
+    card.classList.remove("change");
+
+  }, 120);
+
+}
+
+
+/* ----------------------------------------
+   ランダム抽選
+---------------------------------------- */
+
 drawButton.addEventListener("click", () => {
 
-  let candidates =
-    getCandidates();
-
-
-  // 全部引き終わった場合
-  if (candidates.length === 0) {
-
-    usedQuestions.clear();
-
-    candidates =
-      getCandidates();
-
-  }
+  const candidates =
+    getUnusedCandidates();
 
 
   if (candidates.length === 0) {
 
-    questionElement.textContent =
-      "その条件に合う質問がありません。";
+    questionText.textContent =
+      "この条件では、もう全部引きました。";
+
+    questionDanger.textContent = "";
+
+    questionTags.textContent =
+      "カテゴリか危険度を変えるか、履歴をリセットしてください。";
+
+    currentQuestion = null;
+
+    updateSaveButtons();
 
     return;
 
@@ -378,35 +1488,329 @@ drawButton.addEventListener("click", () => {
     );
 
 
-  const question =
+  const selected =
     candidates[randomIndex];
 
 
-  usedQuestions.add(question);
+  usedQuestions.add(selected.id);
+
+  saveSet(
+    "10years-used",
+    usedQuestions
+  );
 
 
-  const originalIndex =
-    questions.indexOf(question);
+  displayQuestion(selected);
 
-
-  numberElement.textContent =
-    originalIndex + 1;
-
-
-  questionElement.textContent =
-    question.text;
-
-
-  tagsElement.textContent =
-    question.tags.join(" ／ ");
-
-
-  updateCandidateCount();
+  updateStatus();
 
 });
 
 
-updateCandidateCount();
+/* ----------------------------------------
+   お気に入り
+---------------------------------------- */
+
+favoriteButton.addEventListener("click", () => {
+
+  if (!currentQuestion) {
+    return;
+  }
+
+
+  const id =
+    currentQuestion.id;
+
+
+  if (favoriteQuestions.has(id)) {
+
+    favoriteQuestions.delete(id);
+
+  } else {
+
+    favoriteQuestions.add(id);
+
+  }
+
+
+  saveSet(
+    "10years-favorites",
+    favoriteQuestions
+  );
+
+
+  updateSaveButtons();
+
+  renderSavedLists();
+
+});
+
+
+/* ----------------------------------------
+   あとで聞く
+---------------------------------------- */
+
+laterButton.addEventListener("click", () => {
+
+  if (!currentQuestion) {
+    return;
+  }
+
+
+  const id =
+    currentQuestion.id;
+
+
+  if (laterQuestions.has(id)) {
+
+    laterQuestions.delete(id);
+
+  } else {
+
+    laterQuestions.add(id);
+
+  }
+
+
+  saveSet(
+    "10years-later",
+    laterQuestions
+  );
+
+
+  updateSaveButtons();
+
+  renderSavedLists();
+
+});
+
+
+/* ----------------------------------------
+   保存ボタン表示
+---------------------------------------- */
+
+function updateSaveButtons() {
+
+  const enabled =
+    Boolean(currentQuestion);
+
+
+  favoriteButton.disabled =
+    !enabled;
+
+  laterButton.disabled =
+    !enabled;
+
+
+  if (!currentQuestion) {
+
+    favoriteButton.textContent =
+      "☆ お気に入り";
+
+    laterButton.textContent =
+      "⏰ あとで聞く";
+
+    favoriteButton.classList.remove("active");
+
+    laterButton.classList.remove("active");
+
+    return;
+
+  }
+
+
+  if (
+    favoriteQuestions.has(
+      currentQuestion.id
+    )
+  ) {
+
+    favoriteButton.textContent =
+      "★ お気に入り済み";
+
+    favoriteButton.classList.add("active");
+
+  } else {
+
+    favoriteButton.textContent =
+      "☆ お気に入り";
+
+    favoriteButton.classList.remove("active");
+
+  }
+
+
+  if (
+    laterQuestions.has(
+      currentQuestion.id
+    )
+  ) {
+
+    laterButton.textContent =
+      "✓ あとで聞く";
+
+    laterButton.classList.add("active");
+
+  } else {
+
+    laterButton.textContent =
+      "⏰ あとで聞く";
+
+    laterButton.classList.remove("active");
+
+  }
+
+}
+
+
+/* ----------------------------------------
+   保存リスト
+---------------------------------------- */
+
+function renderSavedList(
+  ids,
+  elementId
+) {
+
+  const element =
+    document.getElementById(elementId);
+
+
+  element.innerHTML = "";
+
+
+  const saved =
+    questions.filter(question =>
+      ids.has(question.id)
+    );
+
+
+  if (saved.length === 0) {
+
+    const empty =
+      document.createElement("div");
+
+    empty.className =
+      "empty";
+
+    empty.textContent =
+      "まだありません。";
+
+    element.appendChild(empty);
+
+    return;
+
+  }
+
+
+  saved.forEach(question => {
+
+    const button =
+      document.createElement("button");
+
+
+    button.type =
+      "button";
+
+
+    button.className =
+      "saved-item";
+
+
+    button.textContent =
+      `${question.id}. ${question.text}`;
+
+
+    button.addEventListener(
+      "click",
+      () => {
+
+        displayQuestion(question);
+
+        window.scrollTo({
+          top: 0,
+          behavior: "smooth"
+        });
+
+      }
+    );
+
+
+    element.appendChild(button);
+
+  });
+
+}
+
+
+function renderSavedLists() {
+
+  renderSavedList(
+    favoriteQuestions,
+    "favorite-list"
+  );
+
+
+  renderSavedList(
+    laterQuestions,
+    "later-list"
+  );
+
+
+  document
+    .getElementById("favorite-count")
+    .textContent =
+      favoriteQuestions.size;
+
+
+  document
+    .getElementById("later-count")
+    .textContent =
+      laterQuestions.size;
+
+}
+
+
+/* ----------------------------------------
+   履歴リセット
+---------------------------------------- */
+
+resetButton.addEventListener("click", () => {
+
+  const result =
+    confirm(
+      "引いた質問の履歴をリセットしますか？\nお気に入りと「あとで聞く」は残ります。"
+    );
+
+
+  if (!result) {
+    return;
+  }
+
+
+  usedQuestions.clear();
+
+
+  saveSet(
+    "10years-used",
+    usedQuestions
+  );
+
+
+  updateStatus();
+
+});
+
+
+/* ----------------------------------------
+   初期化
+---------------------------------------- */
+
+updateStatus();
+
+updateSaveButtons();
+
+renderSavedLists();
 
 </script>
 

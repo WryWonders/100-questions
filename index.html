@@ -487,6 +487,10 @@
 
   </details>
 
+  <button class="reset-button" id="start-button">
+    スタート画面に戻る
+  </button>
+  
 </div>
 
 
@@ -1288,6 +1292,8 @@ const resetButton =
 const status =
   document.getElementById("status");
 
+const startButton =
+  document.getElementById("start-button");
 
 /* ----------------------------------------
    フィルター
@@ -1801,6 +1807,82 @@ resetButton.addEventListener("click", () => {
 
 });
 
+
+/* ----------------------------------------
+   スタート画面に戻る
+---------------------------------------- */
+
+startButton.addEventListener("click", () => {
+
+  // 表示中の質問だけクリア
+  currentQuestion = null;
+
+
+  // カテゴリを「全部」に戻す
+  activeCategory = "全部";
+
+
+  document
+    .querySelectorAll("[data-category]")
+    .forEach(button => {
+
+      button.classList.toggle(
+        "active",
+        button.dataset.category === "全部"
+      );
+
+    });
+
+
+  // 危険度を5に戻す
+  maxDanger = 5;
+
+
+  document
+    .querySelectorAll("[data-danger]")
+    .forEach(button => {
+
+      button.classList.toggle(
+        "active",
+        Number(button.dataset.danger) === 5
+      );
+
+    });
+
+
+  // 質問カードを初期状態へ
+  questionNumber.textContent =
+    "—";
+
+
+  questionDanger.textContent =
+    "";
+
+
+  questionText.textContent =
+    "カテゴリと危険度を選んで、質問を引いてください。";
+
+
+  questionTags.textContent =
+    "";
+
+
+  // 保存ボタンも初期状態へ
+  updateSaveButtons();
+
+
+  // ステータス更新
+  updateStatus();
+
+
+  // 画面上部へ戻る
+  window.scrollTo({
+    top: 0,
+    behavior: "smooth"
+  });
+
+});
+  
 
 /* ----------------------------------------
    初期化
